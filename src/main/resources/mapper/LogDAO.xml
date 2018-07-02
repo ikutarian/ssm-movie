@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.LogDAO">
+
+    <insert id="insertAdminLoginLog">
+        INSERT INTO adminlog (
+            admin_id,
+            ip,
+            addtime
+        ) VALUES (
+            #{adminId},
+            #{ip},
+            #{loginTime}
+        )
+    </insert>
+
+    <resultMap id="adminLoginLogResultMap" type="com.okada.movie.model.AdminLoginLog">
+        <id column="id" property="id"/>
+        <result column="ip" property="ip"/>
+        <result column="addtime" property="addTime"/>
+        <association property="admin" javaType="com.okada.movie.model.Admin">
+            <id column="admin_id" property="id"/>
+            <result column="admin_name" property="name"/>
+        </association>
+    </resultMap>
+    <select id="adminLoginLogList" resultMap="adminLoginLogResultMap">
+        SELECT
+            adminlog.id,
+            adminlog.ip,
+            adminlog.addtime,
+            admin.id AS admin_id,
+            admin.name AS admin_name
+        FROM
+            adminlog, admin
+        WHERE
+            adminlog.admin_id = admin.id
+        ORDER BY
+            adminlog.addtime DESC
+    </select>
+
+    <insert id="insertUserLoginLog">
+        INSERT INTO userlog (
+            user_id,
+            ip
+        ) VALUES (
+            #{user_id},
+            #{ip}
+        )
+    </insert>
+
+    <resultMap id="userLoginLogResultMap" type="com.okada.movie.model.UserLoginLog">
+        <id column="id" property="id"/>
+        <result column="ip" property="ip"/>
+        <result column="addtime" property="addTime"/>
+    </resultMap>
+    <select id="userLoginLogList" resultMap="userLoginLogResultMap">
+        SELECT
+            *
+        FROM
+            userlog
+        WHERE
+            user_id = #{userId}
+        ORDER BY
+            addtime DESC
+    </select>
+
+</mapper>

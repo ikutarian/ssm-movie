@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.TagDAO">
+
+    <select id="countByName" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            tag
+        WHERE
+            name = #{name}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO tag (
+            name,
+            addtime
+        ) VALUES (
+            #{name},
+            #{addtime}
+        )
+    </insert>
+
+    <resultMap id="tagResultMap" type="com.okada.movie.model.Tag">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="addtime" property="addTime"/>
+    </resultMap>
+
+    <select id="list" resultMap="tagResultMap">
+        SELECT
+            *
+        FROM
+            tag
+        ORDER BY
+            addtime DESC
+    </select>
+
+    <delete id="delete">
+        DELETE FROM
+            tag
+        WHERE
+            id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="tagResultMap">
+        SELECT
+            *
+        FROM
+            tag
+        WHERE
+            id = #{id}
+    </select>
+
+    <update id="updateTag">
+        UPDATE
+            tag
+        SET
+            name = #{name}
+        WHERE
+            id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.AuthDAO">
+
+    <resultMap id="AuthResultMap" type="com.okada.movie.model.Auth">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="url" property="url" />
+        <result column="addtime" property="addTime"/>
+    </resultMap>
+
+    <insert id="add">
+        INSERT INTO auth (
+            name,
+            url,
+            addtime
+        ) VALUES (
+            #{name},
+            #{url},
+            #{addTime}
+        )
+    </insert>
+
+    <select id="list" resultMap="AuthResultMap">
+        SELECT
+            *
+        FROM
+            auth
+        ORDER BY
+            addtime DESC
+    </select>
+
+    <delete id="delete">
+        DELETE FROM
+            auth
+        WHERE
+            id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="AuthResultMap">
+        SELECT
+            *
+        FROM
+            auth
+        WHERE
+            id = #{id}
+    </select>
+
+    <update id="updateAuth" parameterType="com.okada.movie.model.Auth">
+        UPDATE
+            auth
+        SET
+            name = #{name},
+            url = #{url}
+        WHERE
+            id = #{id}
+    </update>
+
+</mapper>

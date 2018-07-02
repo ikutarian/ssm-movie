@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.MovieCollectionDAO">
+
+    <resultMap id="movieCollectionResultMap" type="com.okada.movie.model.MovieCollection">
+        <id column="id" property="id"/>
+        <result column="addtime" property="addTime"/>
+        <association property="movie" javaType="com.okada.movie.model.Movie">
+            <id column="movie_id" property="id"/>
+            <result column="movie_title" property="title"/>
+            <result column="movie_logo" property="logo"/>
+        </association>
+        <association property="user" javaType="com.okada.movie.model.User">
+            <id column="user_id" property="id"/>
+            <result column="user_name" property="name"/>
+        </association>
+    </resultMap>
+
+    <select id="list" resultMap="movieCollectionResultMap">
+        SELECT
+            moviecol.*,
+            movie.id AS movie_id,
+            movie.title AS movie_title,
+            user.id AS user_id,
+            user.name AS user_name
+        FROM
+            moviecol, user, movie
+        WHERE
+            moviecol.movie_id = movie.id
+            AND
+            moviecol.user_id = user.id
+        ORDER BY
+            moviecol.addtime DESC
+    </select>
+
+    <select id="listByUserId" resultMap="movieCollectionResultMap">
+        SELECT
+            moviecol.*,
+            movie.id AS movie_id,
+            movie.title AS movie_title,
+            movie.logo AS movie_logo,
+            user.id AS user_id,
+            user.name AS user_name
+        FROM
+            moviecol, user, movie
+        WHERE
+            moviecol.user_id = #{userId}
+            AND
+            moviecol.movie_id = movie.id
+            AND
+            moviecol.user_id = user.id
+        ORDER BY
+          moviecol.addtime DESC
+    </select>
+
+    <delete id="delete">
+        DELETE FROM
+            moviecol
+        WHERE
+            id = #{id}
+    </delete>
+
+    <select id="selectByUserIdMovieId" resultMap="movieCollectionResultMap">
+         SELECT
+            moviecol.*,
+            movie.id AS movie_id,
+            movie.title AS movie_title,
+            user.id AS user_id,
+            user.name AS user_name
+        FROM
+            moviecol, user, movie
+        WHERE
+            moviecol.user_id = #{userId}
+            AND
+            moviecol.movie_id = #{movieId}
+            AND
+            moviecol.movie_id = movie.id
+            AND
+            moviecol.user_id = user.id
+        ORDER BY
+          moviecol.addtime DESC
+    </select>
+
+    <insert id="addOne">
+        INSERT INTO moviecol (
+            user_id,
+            movie_id
+        ) VALUES (
+            #{userId},
+            #{movieId}
+        )
+    </insert>
+
+</mapper>

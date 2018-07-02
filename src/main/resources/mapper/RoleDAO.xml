@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.RoleDAO">
+
+    <resultMap id="RoleResultMap" type="com.okada.movie.model.Role">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="auths" property="auths"/>
+        <result column="addtime" property="addTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.okada.movie.model.Role">
+        INSERT INTO role (
+            name,
+            auths,
+            addtime
+        ) VALUES (
+            #{name},
+            #{auths},
+            #{addTime}
+        )
+    </insert>
+
+    <select id="list" resultMap="RoleResultMap">
+        SELECT
+            *
+        FROM
+            role
+        ORDER BY
+            addtime DESC
+    </select>
+
+    <delete id="delete">
+        DELETE FROM
+            role
+        WHERE
+            id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="RoleResultMap">
+        SELECT
+            *
+        FROM
+            role
+        WHERE
+            id = #{id}
+    </select>
+
+    <update id="updateRole" parameterType="com.okada.movie.model.Role">
+        UPDATE role
+        SET
+            name = #{name},
+            auths = #{auths}
+        WHERE
+            id = #{id}
+    </update>
+
+</mapper>

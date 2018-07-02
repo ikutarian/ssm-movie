@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.UserDAO">
+
+    <resultMap id="userResultMap" type="com.okada.movie.model.User">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="pwd" property="password"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="info" property="info"/>
+        <result column="face" property="face"/>
+        <result column="uuid" property="uuid"/>
+        <result column="addtime" property="addTime"/>
+    </resultMap>
+
+    <select id="list" resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            user
+        ORDER BY
+            addtime DESC
+    </select>
+
+    <select id="selectById" resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            user
+        WHERE
+            id = #{id}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM
+            user
+        WHERE
+            id = #{id}
+    </delete>
+
+    <select id="countByName" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+        WHERE
+            name = #{name}
+    </select>
+
+    <select id="countByEmail" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+        WHERE
+            email = #{email}
+    </select>
+
+    <select id="countByPhone" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            user
+        WHERE
+            phone = #{phone}
+    </select>
+
+    <insert id="insert" parameterType="com.okada.movie.model.User">
+        INSERT INTO user (
+            name,
+            pwd,
+            email,
+            phone,
+            addtime,
+            uuid
+        ) VALUES (
+            #{name},
+            #{password},
+            #{email},
+            #{phone},
+            #{addTime},
+            #{uuid}
+        )
+    </insert>
+
+    <select id="check" resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            user
+        WHERE
+            name = #{name}
+            AND
+            pwd = ${password}
+    </select>
+
+    <update id="updateUser" parameterType="com.okada.movie.model.User">
+        UPDATE user
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="password != null and password != ''">pwd = #{password},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="info != null and info != ''">info = #{info},</if>
+            <if test="face != null and face != ''">face = #{face},</if>
+        </set>
+        WHERE
+          id = #{id}
+    </update>
+
+</mapper>

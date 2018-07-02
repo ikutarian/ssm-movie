@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.AdminDAO">
+
+    <resultMap id="adminMap" type="com.okada.movie.model.Admin">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="pwd" property="password" />
+        <result column="is_super" property="isSuper"/>
+        <result column="addtime" property="addTime"/>
+        <association column="role_id" property="role" select="com.okada.movie.dao.RoleDAO.selectById"/>
+    </resultMap>
+
+    <select id="check" resultMap="adminMap">
+        SELECT
+            *
+        FROM
+            admin
+        WHERE
+            name = #{name}
+            AND
+            pwd = #{password}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE
+            admin
+        SET
+            pwd = #{newPassword}
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="adminMap">
+        SELECT
+            *
+        FROM
+            admin
+        WHERE
+            id = #{id}
+    </select>
+
+    <insert id="tNormalAdmin">
+        INSERT INTO admin (
+            name,
+            pwd,
+            <if test="roleId != null">role_id,</if>
+            is_super,
+            addtime
+        ) VALUES (
+            #{name},
+            #{password},
+            <if test="roleId != null">#{roleId},</if>
+            #{type},
+            #{addTime}
+        )
+    </insert>
+
+    <select id="list" resultMap="adminMap">
+        SELECT
+            *
+        FROM
+            admin
+        ORDER BY
+            addtime DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.okada.movie.dao.MovieDAO">
+
+    <insert id="saveOne">
+        INSERT INTO movie (
+            title,
+            url,
+            info,
+            logo,
+            star,
+            playnum,
+            commentnum,
+            tag_id,
+            area,
+            release_time,
+            length,
+            addtime
+        ) VALUES (
+            #{title},
+            #{url},
+            #{info},
+            #{logo},
+            #{star},
+            #{playNum},
+            #{commentNum},
+            #{tag.id},
+            #{area},
+            #{releaseTime},
+            #{length},
+            #{addTime}
+        )
+    </insert>
+
+    <resultMap id="movieResultMap" type="com.okada.movie.model.Movie">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="url" property="url"/>
+        <result column="info" property="info"/>
+        <result column="logo" property="logo"/>
+        <result column="star" property="star"/>
+        <result column="playnum" property="playNum"/>
+        <result column="commentnum" property="commentNum"/>
+        <result column="area" property="area"/>
+        <result column="release_time" property="releaseTime"/>
+        <result column="length" property="length"/>
+        <result column="addtime" property="addTime"/>
+        <association property="tag" javaType="com.okada.movie.model.Tag">
+            <id column="tag_id" property="id"/>
+            <result column="tag_name" property="name"/>
+            <result column="tag_addtime" property="addTime"/>
+        </association>
+    </resultMap>
+
+    <select id="list" resultMap="movieResultMap">
+        SELECT
+            movie.*,
+            tag.id AS tag_id,
+            tag.name AS tag_name,
+            tag.addtime AS tag_addtime
+        FROM
+            movie, tag
+        WHERE
+            movie.tag_id = tag.id
+        ORDER BY
+            movie.release_time DESC
+    </select>
+
+    <select id="listBy" resultMap="movieResultMap">
+        SELECT
+            *
+        FROM
+            movie
+        <where>
+            <if test="tid != null">tag_id = #{tid}</if>
+            <if test="star != null">AND star = #{star}</if>
+        </where>
+        <trim prefix="ORDER BY" suffixOverrides=",">
+            <if test="time != null">
+                addtime
+                <if test="time == 1">DESC</if>
+                <if test="time == 2">ASC</if>
+                ,
+            </if>
+            <if test="pm != null">
+                playnum
+                <if test="pm == 1">DESC</if>
+                <if test="pm == 2">ASC</if>
+                ,
+            </if>
+            <if test="cm != null">
+                commentnum
+                <if test="cm == 1">DESC</if>
+                <if test="cm == 2">ASC</if>
+            </if>
+        </trim>
+    </select>
+
+    <delete id="delete">
+        DELETE FROM
+          movie
+        WHERE
+          id = #{id}
+    </delete>
+
+    <select id="selectById" resultMap="movieResultMap">
+        SELECT
+            movie.*,
+            tag.id AS tag_id,
+            tag.name AS tag_name,
+            tag.addtime AS tag_addtime
+        FROM
+            movie, tag
+        WHERE
+            movie.tag_id = tag.id
+            AND
+            movie.id = #{id}
+    </select>
+
+    <select id="countByTitle" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            movie
+        WHERE
+            title = #{title}
+    </select>
+
+    <update id="updateOne">
+        UPDATE movie
+        SET
+            title = #{title},
+            <if test="url != null and url != ''">url = #{url},</if>
+            info = #{info},
+            <if test="logo != null and logo != ''">logo = #{logo},</if>
+            star = #{star},
+            tag_id = #{tag.id},
+            area = #{area},
+            release_time = #{releaseTime},
+            <if test="playNum != null">playnum = #{playNum},</if>
+            <if test="commentNum != null">commentnum = #{commentNum},</if>
+            length = #{length}
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="searchByTitle" resultMap="movieResultMap">
+        SELECT
+            *
+        FROM
+            movie
+        WHERE
+            title LIKE CONCAT('%', #{title}, '%')
+        ORDER BY
+            release_time DESC
+    </select>
+
+</mapper>
