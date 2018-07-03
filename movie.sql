@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS movie DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+USE movie;
+
 -- 管理员
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
