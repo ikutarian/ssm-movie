@@ -120,15 +120,6 @@ CREATE TABLE `moviecol` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO moviecol (movie_id, user_id, addtime) VALUES (7, 1, now()),
-                                                         (7, 2, now()),
-                                                         (7, 3, now()),
-                                                         (7, 4, now()),
-                                                         (8, 5, now()),
-                                                         (8, 6, now()),
-                                                         (8, 7, now()),
-                                                         (8, 8, now());
-
 
 -- 权限
 DROP TABLE IF EXISTS `auth`;
